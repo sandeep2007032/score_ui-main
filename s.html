@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <title>Score Management</title>
+    <style>
+        .mid {
+            display: flex;
+            justify-content: space-between; /* Space between filter and search */
+            align-items: center; /* Align items vertically centered */
+            margin-top: 20px; /* Add some margin to the top if needed */
+        }
+
+        .filter {
+            flex: 1; /* Allow filter to take space on the left */
+        }
+
+        .search {
+            flex: 1; /* Allow search to take space on the right */
+            display: flex;
+            justify-content: flex-end; /* Align search input to the right */
+        }
+
+        .search input {
+            padding: 5px; /* Add padding for better appearance */
+        }
+
+        .footers {
+            display: flex;
+            justify-content: space-between; /* Space between pagination controls and info */
+            align-items: center; /* Align items vertically centered */
+            margin-top: 20px;
+        }
+        .filter-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .filter-icon {
+            cursor: pointer;
+            font-size: 24px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .filter-row {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-item label {
+            min-width: 100px;
+        }
+
+        #filterDate {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .filter-item select,
+        .filter-item input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .filter-row button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .filter-row button:hover {
+            background-color: #0056b3;
+        }
+
+        .action-icons {
+            display: flex;
+            justify-content: space-around; /* Space out the icons */
+        }
+
+        .action-icons a {
+            color: black; /* Default color for icons */
+            text-decoration: none; /* Remove underline */
+            margin: 0 5px; /* Space between icons */
+        }
+
+        .delete-icon i {
+            color: red; /* Red color for delete icon */
+        }
+
+        .action-icons a:hover {
+            color: #007bff; /* Change color on hover, if desired */
+        }
+
+        .table-container {
+    margin-top: 20px;
+    border-radius: 15px;
+    background-color: #ffffff;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+#scoreTable {
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 15px;
+    overflow: hidden; /* Hide scrollbars in the table container */
+}
+
+.table-container thead th {
+    position: sticky;
+    top: 0;
+    background-color: #ffffff; /* Match the table background */
+    z-index: 1; /* Ensure header stays above the content */
+}
+
+.table-container tbody {
+    display: block;
+    max-height: 400px; /* Adjust based on your needs */
+    overflow-y: auto; /* Enable vertical scroll */
+    width: 100%;
+}
+
+.table-container tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* Ensure table layout stays consistent */
+}
+
+.table-container th, .table-container td {
+    padding: 10px;
+    text-align: left;
+}
+
+.table-container td {
+    /* Add borders if needed */
+}
+
+       
+
+    </style>
+</head>
+
+<body>
+    <div class="herder">
+        <h2>Score Management</h2>
+    </div>
+    <div class="mid">
+        <div class="filter-container">
+            <i class="fa fa-filter filter-icon" onclick="toggleFilterRow()"></i>
+            <div class="filter-row" id="filterRow">
+                
+                <div class="filter-item">
+                    <label for="filterDate">Date:</label>
+                    <input type="text" id="filterDate" placeholder="Select Date">
+                </div>
+                
+                <div class="filter-item">
+                    <label for="filterProjectTitle">Project:</label>
+                    <select id="filterProjectTitle">
+                        <option value="">All Projects</option>
+                        <option value="">Blockchain Development</option>
+                       
+                        <option value="">AI Algorithms</option>
+                        <option value="">	VR Development</option>
+                        <!-- Add project options here -->
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label for="filterStatus">Status:</label>
+                    <select id="filterStatus">
+                        <option value="">All Statuses</option>
+                        <option value="Yes">Scored</option>
+                        <option value="No">Not Scored</option>
+                    </select>
+                </div>
+                
+                <button onclick="applyFilters()">Apply Filter</button>
+            </div>
+        </div>
+        
+        
+        <div class="search">
+            <input type="text" id="searchInput" placeholder="Search by name.." onkeyup="searchByName()">
+        </div>
+       
+    </div>
+    <div class="table">
+        <table id="scoreTable">
+            <thead>
+                <tr class="table-header">
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Project Title</th>
+                    <th>Assessment Title</th>
+                    <th>Scored</th>
+                    <th>Submitted On</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data rows here -->
+                <tr><td>01</td><td>Sandeep</td><td>sandeep@vtech.com</td><td>AI Research Project & Case Study</td><td>Personal and Professional Characteristics</td><td>Yes</td><td>7/8/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>02</td><td>Anita</td><td>anita@vtech.com</td><td>Machine Learning Analysis</td><td>Technical Skills Evaluation</td><td>Yes</td><td>7/9/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>03</td><td>John</td><td>john@vtech.com</td><td>Cloud Computing Project</td><td>Cloud Infrastructure</td><td>No</td><td>7/10/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>04</td><td>Sara</td><td>sara@vtech.com</td><td>Blockchain Development</td><td>Cryptography and Security</td><td>Yes</td><td>7/11/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>05</td><td>David</td><td>david@vtech.com</td><td>IoT System Design</td><td>Embedded Systems</td><td>No</td><td>7/12/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>06</td><td>Emma</td><td>emma@vtech.com</td><td>Data Science Project</td><td>Data Analysis Techniques</td><td>Yes</td><td>7/13/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>07</td><td>Mike</td><td>mike@vtech.com</td><td>Cybersecurity Strategies</td><td>Network Security</td><td>No</td><td>7/14/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>08</td><td>Olivia</td><td>olivia@vtech.com</td><td>VR Development</td><td>Immersive Technologies</td><td>Yes</td><td>7/15/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>09</td><td>Chris</td><td>chris@vtech.com</td><td>AR Applications</td><td>Augmented Reality</td><td>No</td><td>7/16/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>10</td><td>Jessica</td><td>jessica@vtech.com</td><td>5G Network Design</td><td>Telecommunications</td><td>Yes</td><td>7/17/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>11</td><td>Laura</td><td>laura@vtech.com</td><td>Big Data Solutions</td><td>Data Management</td><td>No</td><td>7/18/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>12</td><td>Tom</td><td>tom@vtech.com</td><td>Game Development</td><td>Game Mechanics</td><td>Yes</td><td>7/19/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>13</td><td>Rachel</td><td>rachel@vtech.com</td><td>Robotics Engineering</td><td>Automated Systems</td><td>No</td><td>7/20/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>14</td><td>Jake</td><td>jake@vtech.com</td><td>AI Algorithms</td><td>Machine Learning</td><td>Yes</td><td>7/21/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>15</td><td>Grace</td><td>grace@vtech.com</td><td>Data Visualization</td><td>Interactive Dashboards</td><td>No</td><td>7/22/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>16</td><td>Kevin</td><td>kevin@vtech.com</td><td>Web Development</td><td>Frontend and Backend</td><td>Yes</td><td>7/23/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>17</td><td>Alice</td><td>alice@vtech.com</td><td>System Integration</td><td>Software Engineering</td><td>No</td><td>7/24/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>18</td><td>Steve</td><td>steve@vtech.com</td><td>Cyber-Physical Systems</td><td>Embedded Software</td><td>Yes</td><td>7/25/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>19</td><td>Emma</td><td>emma@vtech.com</td><td>Cloud Solutions</td><td>Cloud Management</td><td>No</td><td>7/26/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                <tr><td>20</td><td>Paul</td><td>paul@vtech.com</td><td>Data Engineering</td><td>Data Pipeline Design</td><td>Yes</td><td>7/27/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="footers">
+        <div id="showing-info">Showing 1 to 8 of 20</div>
+        <div id="pagination-controls">
+            <button id="prevBtn" onclick="changePage(-1)">Previous</button>
+            <button id="nextBtn" onclick="changePage(1)">Next</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <script>
+        function toggleFilterRow() {
+            const filterRow = document.getElementById('filterRow');
+            filterRow.style.display = (filterRow.style.display === 'none' || filterRow.style.display === '') ? 'flex' : 'none';
+        }
+
+        function applyFilters() {
+            // Implement filter logic here
+            console.log('Filters applied');
+        }
+
+        
+
+        let currentPage = 1;
+        const rowsPerPage = 8;
+
+        function searchByName() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const tableRows = Array.from(document.querySelectorAll('#scoreTable tbody tr'));
+            
+            // Filter rows based on search input
+            const filteredRows = tableRows.filter(row => {
+                const name = row.cells[1].textContent.toLowerCase();
+                return name.includes(input);
+            });
+
+            // Update table rows display
+            updateTableDisplay(filteredRows, currentPage);
+        }
+
+        function updateTableDisplay(rows, page) {
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+
+            // Hide all rows first
+            document.querySelectorAll('#scoreTable tbody tr').forEach(row => row.style.display = 'none');
+
+            // Show only the rows for the current page
+            rows.slice(start, end).forEach(row => row.style.display = '');
+
+            // Update pagination controls
+            updatePagination(rows.length);
+        }
+
+        function updatePagination(totalRows) {
+            const totalPages = Math.ceil(totalRows / rowsPerPage);
+            const paginationControls = document.getElementById('paginationControls');
+            paginationControls.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.onclick = () => {
+                    currentPage = i;
+                    searchByName(); // Apply search filter and update pagination
+                };
+                paginationControls.appendChild(pageButton);
+            }
+        }
+        const totalRows = document.querySelectorAll('#scoreTable tbody tr').length;
+        const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+        function updateTable() {
+            const rows = document.querySelectorAll('#scoreTable tbody tr');
+            rows.forEach((row, index) => {
+                row.style.display = (index >= (currentPage - 1) * rowsPerPage && index < currentPage * rowsPerPage) ? '' : 'none';
+            });
+            document.getElementById('showing-info').textContent = `Showing ${Math.min((currentPage - 1) * rowsPerPage + 1, totalRows)} to ${Math.min(currentPage * rowsPerPage, totalRows)} of ${totalRows}`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+        function changePage(direction) {
+            currentPage += direction;
+            updateTable();
+        }
+        // Initialize pagination
+        document.addEventListener('DOMContentLoaded', () => {
+            searchByName(); // Initial call to set up pagination and display
+        });
+        // Initialize date picker
+        flatpickr("#filterDate", {
+            dateFormat: "m/d/Y"
+        });
+
+        updateTable(); // Initial table update
+    </script>
+</body>
+
+</html>
+
+
+

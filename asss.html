@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessment Result</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      margin: 20px auto;
+      max-width: 600px;
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .back-arrow {
+      cursor: pointer;
+      font-size: 24px;
+      text-decoration: none;
+    }
+
+    .export-btn {
+      background-color: #f1f1f1;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      border: none;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+    }
+
+    .export-btn img {
+      width: 16px;
+      margin-right: 5px;
+    }
+
+    .section-title {
+      background-color: #ffc107;
+      padding: 10px;
+      text-align: center;
+      font-size: 20px;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .data-table {
+      width: 100%;
+      margin: 20px 0;
+    }
+
+    .data-table th, .data-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .data-table th {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .data-table td {
+      color: #555;
+    }
+
+    .score-table {
+      width: 100%;
+      margin: 20px 0;
+    }
+
+    .score-table th, .score-table td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .score-table th {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .score-table td {
+      color: #555;
+    }
+
+    .submit-btn {
+      background-color: #ffc107;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+      color: white;
+      cursor: pointer;
+      text-align: center;
+      margin: 20px 0;
+      display: block;
+      width: 100%;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .footer img {
+      width: 150px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header Section -->
+    <div class="header">
+      <a class="back-arrow" id="backBtn" href="index.html">← Assessment Result</a>
+      <button class="export-btn" id="exportBtn">
+        <img src="https://image.flaticon.com/icons/png/512/60/60761.png" alt="Export">
+        Export
+      </button>
+    </div>
+
+    <!-- Section Title -->
+    <div class="section-title">AI Technology & Features</div>
+
+    <!-- Data Table -->
+    <table class="data-table">
+      <tr>
+        <th>User Name</th>
+        <td>Alexa Jhon</td>
+      </tr>
+      <tr>
+        <th>Project Manager</th>
+        <td>Steve Loren</td>
+      </tr>
+      <tr>
+        <th>Scorer/Reviewer</th>
+        <td>Daniel Smith</td>
+      </tr>
+      <tr>
+        <th>Assessment Level</th>
+        <td>Baseline</td>
+      </tr>
+      <tr>
+        <th>Knowledge Score (% correct)</th>
+        <td>80%</td>
+      </tr>
+      <tr>
+        <th>Total Questions</th>
+        <td>24/30</td>
+      </tr>
+    </table>
+
+    <!-- Score Section -->
+    <table class="score-table">
+      <tr>
+        <th>Total Score (Range: 0 - 48)</th>
+        <td>35 (75% : >= 36)</td>
+      </tr>
+      <tr>
+        <th>O = Open-ended questions (Range: 0 - 12)</th>
+        <td>9 (75% : >= 9)</td>
+      </tr>
+      <tr>
+        <th>A = Affirmations (Range: 0 - 6)</th>
+        <td>4 (75% : >= 4)</td>
+      </tr>
+      <tr>
+        <th>R = Reflective Listening (Range: 0 - 24)</th>
+        <td>18 (75% : >= 18)</td>
+      </tr>
+      <tr>
+        <th>S = Summaries (Range: 0 - 6)</th>
+        <td>4 (75% : >= 4)</td>
+      </tr>
+    </table>
+
+    <!-- Submit Button -->
+    <button class="submit-btn">Submit</button>
+
+    <!-- Footer -->
+    <div class="footer">
+      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/73/Missouri_Tigers_logo.svg/1024px-Missouri_Tigers_logo.svg.png" alt="Mizzou Logo">
+      <p>Mizzou - University of Missouri</p>
+    </div>
+  </div>
+
+  <script>
+    // Back button logic
+    document.getElementById("backBtn").addEventListener("click", function(event) {
+      event.preventDefault();
+      window.history.back();
+    });
+
+    // Export button logic
+    document.getElementById("exportBtn").addEventListener("click", function() {
+      const element = document.querySelector(".container").outerHTML;
+      const blob = new Blob([element], { type: "text/html" });
+      const link = document.createElement("a");
+
+      link.href = URL.createObjectURL(blob);
+      link.download = "assessment_result.html";
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      document.body.removeChild(link);
+    });
+  </script>
+
+</body>
+</html>

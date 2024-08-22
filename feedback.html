@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <title>Score Management</title>
+
+    <style>
+        /* Your existing styles */
+        /* ... */
+        
+        /* New styles for the details page */
+
+        .mid {
+            display: flex;
+            justify-content: space-between; /* Space between filter and search */
+            align-items: center; /* Align items vertically centered */
+            margin-top: 20px; /* Add some margin to the top if needed */
+        }
+
+        .filter {
+            flex: 1; /* Allow filter to take space on the left */
+        }
+
+        .search {
+            flex: 1; /* Allow search to take space on the right */
+            display: flex;
+            justify-content: flex-end; /* Align search input to the right */
+        }
+
+        .search input {
+            padding: 5px; /* Add padding for better appearance */
+        }
+
+        .footers {
+            display: flex;
+            justify-content: space-between; /* Space between pagination controls and info */
+            align-items: center; /* Align items vertically centered */
+            margin-top: 20px;
+        }
+        .filter-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .filter-icon {
+            cursor: pointer;
+            font-size: 24px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .filter-row {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-item label {
+            min-width: 100px;
+        }
+
+        #filterDate {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .filter-item select,
+        .filter-item input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .filter-row button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .filter-row button:hover {
+            background-color: #0056b3;
+        }
+
+        .action-icons {
+            display: flex;
+            justify-content: space-around; /* Space out the icons */
+        }
+
+        .action-icons a {
+            color: black; /* Default color for icons */
+            text-decoration: none; /* Remove underline */
+            margin: 0 5px; /* Space between icons */
+        }
+
+        .delete-icon i {
+            color: red; /* Red color for delete icon */
+        }
+
+        .action-icons a:hover {
+            color: #007bff; /* Change color on hover, if desired */
+        }
+
+        .table {
+            background-color: #f4f4f4;
+            border-radius: 20px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center; /* Center table horizontally */
+        }
+
+        table {
+            border-collapse: collapse; /* Optional: collapse borders for a cleaner look */
+            width: 100%; /* Optional: set table width to 100% of its container */
+        }
+
+        th, td {
+            border: 1px solid #ddd; /* Add border to table cells */
+            padding: 8px; /* Add padding inside cells */
+            text-align: center; /* Align text to the left */
+        }
+
+        #detailsPage {
+            display: none; /* Hidden by default */
+            padding: 20px;
+            background-color: #f4f4f4;
+           
+
+        }
+        .details{
+            display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;
+        }
+
+
+        #header_detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+        #backButton {
+    display: inline-block;
+    background-image: url('/mnt/data/image.png');
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 30px; /* Adjust padding to make space for the icon */
+    font-size: 18px;
+    text-decoration: none;
+    color: #333;
+}
+
+#feedbackButton {
+    background-color: #fbbd08;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #000;
+}
+
+#feedbackButton img {
+    margin-left: 10px;
+}
+
+#feedbackButton:hover {
+    background-color: #f9a602;
+}
+
+
+.box_detail {
+   
+  background-color: #ffffff; /* White background color */
+  border-radius: 15px; /* Circular radius for rounded corners */
+  padding: 20px; /* Padding inside the box */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for depth */
+  width: auto; /* Width of the box */
+  height: 100%; /* Height of the box */
+  margin: 20px;
+  margin-right: 20px; /* Margin around the box */
+}
+
+.box_detail_fisrt {
+  background-color: #ffffff; /* White background color */
+  border-radius: 15px;
+  border: 2px solid #777171; /* Border color */
+  padding: 20px; /* Padding inside the box */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+  width: auto; /* Width of the box */
+  height: 100%; /* Height of the box */
+  margin: 20px; /* Margin around the box */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.box_1 {
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.box_1 p {
+  color: #807b7b;
+  margin: 0;
+}
+
+.box_1 span {
+  color: #000;
+}
+
+.summary {
+   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 20px;
+}
+
+.summary p {
+  margin: 0;
+}
+
+#total_Answer {
+  background-color: #000;
+  border: 2px solid #000;
+  color: #f9a602;
+  padding: 5px 10px;
+   /* Adjust padding as needed */
+}
+
+       
+
+        .box_detail_second {
+    background-color: #ffffff; /* White background color */
+    border: 2px solid #777171; /* Black border */
+    border-radius: 15px; /* Circular radius for rounded corners */
+     /* Padding inside the box */
+    width: auto; /* Width of the box */
+    height: auto; /* Height of the box, adjusted to fit content */
+    margin: 20px;
+    margin-top: 40px;
+    position: relative; /* Ensure child elements can be positioned relative to this container */
+}
+
+.box_2_h1 {
+    text-align: center;
+    background-color: #f9a602; 
+     /* Background color for the heading */
+    padding: 10px; /* Padding inside the heading for better appearance */
+    margin: 0; /* Remove default margin */
+    border-radius: 15px 15px 0 0; /* Rounded corners on the top */
+}
+
+.logo_box2_{
+    text-align: center;
+    /* Background color for the heading */
+    padding: 10px; /* Padding inside the heading for better appearance */
+    margin: 0; /* Remove default margin */
+    border-radius: 0 0 15px 15px;
+
+}
+
+.img_box_2 {
+    position: relative; /* Allows positioning of text_box_2 relative to the image */
+    width: 100%; /* Full width of the parent container */
+    height: auto; /* Height will adjust based on the content */
+}
+
+.img_box_2 img {
+    width: 100%; /* Make the image full width of its parent */
+    height: auto; /* Maintain the aspect ratio of the image */
+    display: block; /* Remove any default inline spacing */
+}
+
+
+/* Remove hover effects that could affect visibility */
+
+.box_manger {
+    display: flex;
+    flex-direction: row; /* Align items horizontally */
+    justify-content: center; /* Center the entire box_manger content horizontally */
+    align-items: center; /* Center the text vertically within each h2 */
+    background-color: #f9a602; /* Set background color to yellow */
+    padding: 10px; /* Add some padding around the container */
+    gap: 0; /* No gap between items in box_manger */
+}
+
+.text_box_2 {
+    background-color: #c5c2c2; /* Background color for the text box */
+    padding: 10px; /* Add padding inside the text box */
+    margin: 0; /* Remove any default margin */
+}
+
+
+.box_manger h3:first-child {
+    border-right: 2px solid #000; /* Add a black vertical line to the right of the first h2 */
+    padding-right: 15px; /* Add some space between the text and the border */
+}
+
+
+.question {
+    margin: 20px;
+    padding: 20px; /* Add some padding around the question section */
+     /* Light gray background for the entire section */
+    border-radius: 8px;
+    gap: 20px; /* Slightly round the corners */
+}
+
+.qa {
+    margin-bottom: 15px; /* Add some space between each question and answer pair */
+}
+
+.qa h3 {
+    margin: 0 0 5px 0; /* Add space below the question heading */
+    font-weight: bold; /* Make the question bold */
+}
+
+.qa p {
+    padding: 10px;
+    margin: 0;
+    background-color: #c5c2c2; /* Remove default margin from the paragraph */
+}
+
+
+.qa input[type="date"] {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: auto; /* Adjust the width to fit the content */
+    cursor: pointer; /* Add a pointer cursor on hover */
+}
+
+
+
+.btn_box2 {
+    display: flex;
+    justify-content: center; /* Center the buttons horizontally */
+    align-items: center; /* Center the buttons vertically */
+    gap: 10px; /* Optional: Add some space between the buttons */
+    width: 100%; /* Make the container take up the full width */
+}
+
+button {
+    padding: 10px 20px; /* Add padding for a better button appearance */
+    border: none; /* Remove the default border */
+    border-radius: 5px; /* Optional: Round the corners slightly */
+    cursor: pointer; /* Change the cursor to a pointer on hover */
+}
+
+
+        #FeedbackPage {
+            display: none; /* Hidden by default */
+            padding: 20px;
+            background-color: #f4f4f4;
+}
+.feedbackpage{
+
+    display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;
+}
+    </style>
+</head>
+
+<body>
+    <div id="mainPage"> <!-- Wrap the main content for easier toggling -->
+        <div class="herder">
+            <h2>Score Management</h2>
+        </div>
+        <div class="mid">
+            <div class="filter-container">
+                <i class="fa fa-filter filter-icon" onclick="toggleFilterRow()"></i>
+                <div class="filter-row" id="filterRow">
+                    <!-- Filter items -->
+
+
+                    <div class="filter-item">
+                        <label for="filterDate">Date:</label>
+                        <input type="text" id="filterDate" placeholder="Select Date">
+                    </div>
+                    
+                    <div class="filter-item">
+                        <label for="filterProjectTitle">Project:</label>
+                        <select id="filterProjectTitle">
+                            <option value="">All Projects</option>
+                            <option value="">Blockchain Development</option>
+                           
+                            <option value="">AI Algorithms</option>
+                            <option value="">	VR Development</option>
+                            <!-- Add project options here -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-item">
+                        <label for="filterStatus">Status:</label>
+                        <select id="filterStatus">
+                            <option value="">All Statuses</option>
+                            <option value="Yes">Scored</option>
+                            <option value="No">Not Scored</option>
+                        </select>
+                    </div>
+                    
+                    <button onclick="applyFilters()">Apply Filter</button>
+                </div>
+            </div>
+            <div class="search">
+                <input type="text" id="searchInput" placeholder="Search by name.." onkeyup="searchByName()">
+            </div>
+        </div>
+        <div class="table">
+            <table id="scoreTable">
+                <thead>
+                    <!-- Table headers -->
+                    <tr class="table-header">
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Project Title</th>
+                        <th>Assessment Title</th>
+                        <th>Scored</th>
+                        <th>Submitted On</th>
+                        <th>Action</th>
+                    </tr>
+
+
+                </thead>
+                <tbody>
+                            
+
+
+
+
+
+
+                    <tr><td>01</td><td>Sandeep</td><td>sandeep@vtech.com</td><td>AI Research Project & Case Study</td><td>Personal and Professional Characteristics</td><td>Yes</td><td>7/8/2024</td><td><div class="action-icons">
+                        <a href="#" title="View" onclick="viewDetails( 'sandeep@vtech.com','Sandeep', 'AI Research Project & Case Study','7/8/2024');showDetailsPage();"><i class="fas fa-eye"></i></a>
+                        <a href="#" title="Edit" onclick ="viewDetails('sandeep@vtech.com', 'Sandeep', 'AI Research Project & Case Study','7/8/2024');showFeedbackPage();"><i class="fas fa-pencil-alt"></i></a>
+                        <a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a>
+                    </div></td></tr>
+                    <tr><td>02</td><td>Anita</td><td>anita@vtech.com</td><td>Machine Learning Analysis</td><td>Technical Skills Evaluation</td><td>Yes</td><td>7/9/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>03</td><td>John</td><td>john@vtech.com</td><td>Cloud Computing Project</td><td>Cloud Infrastructure</td><td>No</td><td>7/10/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>04</td><td>Sara</td><td>sara@vtech.com</td><td>Blockchain Development</td><td>Cryptography and Security</td><td>Yes</td><td>7/11/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>05</td><td>David</td><td>david@vtech.com</td><td>IoT System Design</td><td>Embedded Systems</td><td>No</td><td>7/12/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>06</td><td>Emma</td><td>emma@vtech.com</td><td>Data Science Project</td><td>Data Analysis Techniques</td><td>Yes</td><td>7/13/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>07</td><td>Mike</td><td>mike@vtech.com</td><td>Cybersecurity Strategies</td><td>Network Security</td><td>No</td><td>7/14/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>08</td><td>Olivia</td><td>olivia@vtech.com</td><td>VR Development</td><td>Immersive Technologies</td><td>Yes</td><td>7/15/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>09</td><td>Chris</td><td>chris@vtech.com</td><td>AR Applications</td><td>Augmented Reality</td><td>No</td><td>7/16/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>10</td><td>Jessica</td><td>jessica@vtech.com</td><td>5G Network Design</td><td>Telecommunications</td><td>Yes</td><td>7/17/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>11</td><td>Laura</td><td>laura@vtech.com</td><td>Big Data Solutions</td><td>Data Management</td><td>No</td><td>7/18/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>12</td><td>Tom</td><td>tom@vtech.com</td><td>Game Development</td><td>Game Mechanics</td><td>Yes</td><td>7/19/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>13</td><td>Rachel</td><td>rachel@vtech.com</td><td>Robotics Engineering</td><td>Automated Systems</td><td>No</td><td>7/20/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>14</td><td>Jake</td><td>jake@vtech.com</td><td>AI Algorithms</td><td>Machine Learning</td><td>Yes</td><td>7/21/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>15</td><td>Grace</td><td>grace@vtech.com</td><td>Data Visualization</td><td>Interactive Dashboards</td><td>No</td><td>7/22/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>16</td><td>Kevin</td><td>kevin@vtech.com</td><td>Web Development</td><td>Frontend and Backend</td><td>Yes</td><td>7/23/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>17</td><td>Alice</td><td>alice@vtech.com</td><td>System Integration</td><td>Software Engineering</td><td>No</td><td>7/24/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>18</td><td>Steve</td><td>steve@vtech.com</td><td>Cyber-Physical Systems</td><td>Embedded Software</td><td>Yes</td><td>7/25/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>19</td><td>Emma</td><td>emma@vtech.com</td><td>Cloud Solutions</td><td>Cloud Management</td><td>No</td><td>7/26/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+                    <tr><td>20</td><td>Paul</td><td>paul@vtech.com</td><td>Data Engineering</td><td>Data Pipeline Design</td><td>Yes</td><td>7/27/2024</td><td><div class="action-icons"><a href="#" title="View"><i class="fas fa-eye"></i></a><a href="#" title="Edit"><i class="fas fa-pencil-alt"></i></a><a href="#" title="Delete" class="delete-icon"><i class="fas fa-trash"></i></a></div></td></tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </tbody>
+            </table>
+        </div>
+        <div class="footers">
+            <div id="showing-info">Showing 1 to 8 of 20</div>
+            <div id="pagination-controls">
+                <button id="prevBtn" onclick="changePage(-1)">Previous</button>
+                <button id="nextBtn" onclick="changePage(1)">Next</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Details page -->
+    <div id="detailsPage" class="details">
+        <div id="header_detail">
+            <a href="#" id="backButton" onclick="showMainPage()">
+               <i class="fas fa-arrow-left"></i> 
+               View Submitted Assessment </a>
+            <button id="feedbackButton" onclick="showFeedbackPage()">
+                Give Feedback  <i class="fas fa-comment-dots"></i>
+            </button>
+        </div>
+        
+        <div class="box_detail">
+
+
+            
+            <div class="box_detail_fisrt">
+                <div class="box_1">
+                    <p>Username: <span id="detailName"></span></p>
+                    <p>Email: <span id="detailEmail"></span></p>
+                    <p>Submitted On: <span id="detailSubmitted"></span></p>
+                </div>
+                <div class="summary">
+                    <p>
+                        <span id="total_Answer">Total Answer: 15/20</span>
+                    </p>
+                    <p>Project: <span id="detailProject"></span></p>
+                </div>
+            </div>
+            
+
+
+                     <div class="box_detail_second">
+                              <h1 class="box_2_h1">AI Technologies Used</h1>
+                              <div class="img_box_2">
+                                <img src="/Screenshot 2024-08-21 051550.png" alt="">
+                              </div>
+                             <div class="text_box_2">
+                                <p id="">This isPeople use it because it has a fairly normal distribution of letters and words (making it look like normal English), but it’s also Latin, which means your average reader won’t get distracted by trying to read it. It’s perfect for showcasing design work as it should look when fleshed out with text, because it allows viewers to focus on the design work itself, instead of the text. It’s also a great way to showcase the functionality of programs like word processors, font types, </p>
+                             </div>
+                               <div class="box_manger">
+                                <h3>Project Manger :<span id="manger">SKy</span></h3><h3>Project Type :<span id="project_type"> Assesment</span></h3>
+                               </div>
+                                
+                               <div class="question">
+                                <div class="qa">
+                                    <h3>Question 1: Tell me about self?</h3>
+                                    <p>Answer: John Doe  
+                                        People use it because it has a fairly normal distribution of letters and words (making it look like normal English), but it’s also Latin, which means your average reader won’t get distracted by trying to read it. It’s perfect for showcasing design work as it should look when fleshed out with text, because it allows viewers to focus on the design work itself, instead of the text. It’s also a great way to showcase the functionality of programs like word processors, font types,
+                                    </p>
+                                </div>
+                                <div class="qa">
+                                    <h3>Question 2: Date of Birth?</h3>
+                                    <p>Answer: <input type="date" id="dob" name="dob" value="1990-01-01"></p>
+                                </div>
+                                
+                                <div class="qa">
+                                    <h3>Question 3: What is your favorite color?</h3>
+                                    <p>Answer: Blue</p>
+                                </div>
+                                <div class="qa">
+                                    <h3>Question 4: What is your profession?</h3>
+                                    <p>Answer: Software Developer</p>
+                                </div>
+                                <div class="btn_box2" style="align-items: center;">
+                                    <button id="cancel" >cancel</button>  <button style="background-color: #f9a602;" id="submit">Submit</button>
+                                </div>
+
+                            </div>
+                            <div class="logo_box2_" style="background-color: #c5c2c2;">
+<img src="/logo-dark.png" alt="" width="10%" height="10%">
+                            </div>
+                            
+
+
+
+
+
+                     </div>
+
+
+
+
+
+
+        </div>
+    </div>
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="FeedbackPage"  class="feedbackpage">
+        <div id="header_detail">
+            <a href="#" id="backButton" onclick="showMainPage()">
+               <i class="fas fa-arrow-left"></i> 
+               View Submitted Assessment </a>
+            <button id="feedbackButton" onclick="showFeedbackPage()">
+                Give Feedback  <i class="fas fa-comment-dots"></i>
+            </button>
+        </div>
+        
+        <div class="box_detail">
+
+
+            
+            <div class="box_detail_fisrt">
+                <div class="box_1">
+                    <p>Username: <span id="detailName"></span></p>
+                    <p>Email: <span id="detailEmail"></span></p>
+                    <p>Submitted On: <span id="detailSubmitted"></span></p>
+                </div>
+                <div class="summary">
+                    <p>
+                        <span id="total_Answer">Total Answer: 15/20</span>
+                    </p>
+                    <p>Project: <span id="detailProject"></span></p>
+                </div>
+            </div>
+            
+
+
+                     <div class="box_detail_second">
+                              <h1 class="box_2_h1">AI Technologies Used</h1>
+                              <div class="img_box_2">
+                                <img src="/Screenshot 2024-08-21 051550.png" alt="">
+                              </div>
+                             <div class="text_box_2">
+                                <p id="">This isPeople use it because it has a fairly normal distribution of letters and words (making it look like normal English), but it’s also Latin, which means your average reader won’t get distracted by trying to read it. It’s perfect for showcasing design work as it should look when fleshed out with text, because it allows viewers to focus on the design work itself, instead of the text. It’s also a great way to showcase the functionality of programs like word processors, font types, </p>
+                             </div>
+                               <div class="box_manger">
+                                <h3>Project Manger :<span id="manger">SKy</span></h3><h3>Project Type :<span id="project_type"> Assesment</span></h3>
+                               </div>
+                                
+                               <div class="question">
+                                <div class="qa">
+                                    <h3>Question 1: Tell me about self?</h3>
+                                    <p>Answer: John Doe  
+                                        People use it because it has a fairly normal distribution of letters and words (making it look like normal English), but it’s also Latin, which means your average reader won’t get distracted by trying to read it. It’s perfect for showcasing design work as it should look when fleshed out with text, because it allows viewers to focus on the design work itself, instead of the text. It’s also a great way to showcase the functionality of programs like word processors, font types,
+                                    </p>
+                                </div>
+                                <div class="qa">
+                                    <h3>Question 2: Date of Birth?</h3>
+                                    <p>Answer: <input type="date" id="dob" name="dob" value="1990-01-01"></p>
+                                </div>
+                                
+                                <div class="qa">
+                                    <h3>Question 3: What is your favorite color?</h3>
+                                    <p>Answer: Blue</p>
+                                </div>
+                                <div class="qa">
+                                    <h3>Question 4: What is your profession?</h3>
+                                    <p>Answer: Software Developer</p>
+                                </div>
+                                <div class="btn_box2" style="align-items: center;">
+                                    <button id="cancel" >cancel</button>  <button style="background-color: #f9a602;" id="submit">Submit</button>
+                                </div>
+
+                            </div>
+                            <div class="logo_box2_" style="background-color: #c5c2c2;">
+<img src="/logo-dark.png" alt="" width="10%" height="10%">
+                            </div>
+                            
+
+
+
+
+
+                     </div>
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <script>
+        // Toggle filter row
+        function toggleFilterRow() {
+            const filterRow = document.getElementById('filterRow');
+            filterRow.style.display = (filterRow.style.display === 'none' || filterRow.style.display === '') ? 'flex' : 'none';
+        }
+
+        // Apply filters
+        function applyFilters() {
+            // Implement filter logic here
+            console.log('Filters applied');
+        }
+
+        // Show details page
+        function viewDetails(email, name, project ,Submitted ) {
+    // Set the details in the details page
+    document.getElementById('detailEmail').textContent = email;
+    document.getElementById('detailName').textContent = name;
+    document.getElementById('detailProject').textContent = project;
+    document.getElementById('detailSubmitted').textContent = Submitted;
+}
+
+function showDetailsPage() {
+    // Hide the main page and show the details page
+    document.getElementById('mainPage').style.display = 'none';
+    document.getElementById('detailsPage').style.display = 'block';
+    document.getElementById('FeedbackPage').style.display = 'none';
+}
+function viewDetails(email, name, project ,Submitted ) {
+    // Set the details in the details page
+    document.getElementById('detailEmail').textContent = email;
+    document.getElementById('detailName').textContent = name;
+    document.getElementById('detailProject').textContent = project;
+    document.getElementById('detailSubmitted').textContent = Submitted;
+}
+
+function showFeedbackPage() {
+    // Hide the main page and show the feedback page
+    document.getElementById('mainPage').style.display = 'none';
+    document.getElementById('detailsPage').style.display = 'none';
+    document.getElementById('FeedbackPage').style.display = 'block';
+}
+
+function showMainPage() {
+    // Hide the details page and the feedback page, and show the main page
+    document.getElementById('detailsPage').style.display = 'none';
+    document.getElementById('FeedbackPage').style.display = 'none';
+    document.getElementById('mainPage').style.display = 'block';
+}
+
+
+        // Pagination and search functionalities
+        let currentPage = 1;
+        const rowsPerPage = 8;
+
+        function searchByName() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const tableRows = Array.from(document.querySelectorAll('#scoreTable tbody tr'));
+            
+            // Filter rows based on search input
+            const filteredRows = tableRows.filter(row => {
+                const name = row.cells[1].textContent.toLowerCase();
+                return name.includes(input);
+            });
+
+            // Update table rows display
+            updateTableDisplay(filteredRows, currentPage);
+        }
+
+        function updateTableDisplay(rows, page) {
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+
+            // Hide all rows first
+            document.querySelectorAll('#scoreTable tbody tr').forEach(row => row.style.display = 'none');
+
+            // Show only the rows for the current page
+            rows.slice(start, end).forEach(row => row.style.display = '');
+
+            // Update pagination controls
+            updatePagination(rows.length);
+        }
+
+        function updatePagination(totalRows) {
+            const totalPages = Math.ceil(totalRows / rowsPerPage);
+            const paginationControls = document.getElementById('paginationControls');
+            paginationControls.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.onclick = () => {
+                    currentPage = i;
+                    searchByName(); // Apply search filter and update pagination
+                };
+                paginationControls.appendChild(pageButton);
+            }
+        }
+        const totalRows = document.querySelectorAll('#scoreTable tbody tr').length;
+        const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+        function updateTable() {
+            const rows = document.querySelectorAll('#scoreTable tbody tr');
+            rows.forEach((row, index) => {
+                row.style.display = (index >= (currentPage - 1) * rowsPerPage && index < currentPage * rowsPerPage) ? '' : 'none';
+            });
+            document.getElementById('showing-info').textContent = `Showing ${Math.min((currentPage - 1) * rowsPerPage + 1, totalRows)} to ${Math.min(currentPage * rowsPerPage, totalRows)} of ${totalRows}`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+        function changePage(direction) {
+            currentPage += direction;
+            updateTable();
+        }
+        // Initialize pagination
+        document.addEventListener('DOMContentLoaded', () => {
+            searchByName(); // Initial call to set up pagination and display
+        });
+        // Initialize date picker
+        flatpickr("#filterDate", {
+            dateFormat: "m/d/Y"
+        });
+
+        updateTable();
+    </script>
+</body>
+
+</html>
